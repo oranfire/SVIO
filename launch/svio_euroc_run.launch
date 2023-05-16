@@ -1,0 +1,11 @@
+<launch>
+
+  <arg name="config_file" default="$(find svio)/../config/euroc.yaml"/>
+
+  <node pkg="svio" type="svio_stereo_node" name="svio_stereo_node" output="screen" args="$(arg config_file)">
+    <param name="config_file" type="string" value="$(arg config_file)"/>
+  </node>
+
+  <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find svio)/../config/rviz_config_euroc.rviz"/>
+  
+</launch>

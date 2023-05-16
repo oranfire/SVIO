@@ -1,0 +1,123 @@
+%YAML:1.0
+
+model_type: PINHOLE
+camera_name: camera
+image_width: 640
+image_height: 480
+distortion_parameters:
+   k1: 0 # -2.9839715720358556e-01
+   k2: 0 # 9.2224519780237782e-02
+   p1: 0 # -1.1990340691497372e-04
+   p2: 0 # -7.4597868882045419e-05
+projection_parameters:
+   fx: 4.59357e+02 
+   fy: 4.59764e+02  
+   cx: 3.32695e+02
+   cy: 2.58998e+02
+
+# Topics 
+imu_topic: "/imu"
+image_topic: "/cam0/color"
+dpt_img_topic: "/cam0/depth"
+output_path: "/home/oran/WS/Work/SLAM/SVIO/output"
+
+# Extrinsic parameter between IMU and Camera.
+estimate_extrinsic: 0   # 0  Have an accurate extrinsic parameters. We will trust the following imu^R_cam, imu^T_cam, don't change it.
+                        # 1  Have an initial guess about extrinsic parameters. We will optimize around your initial guess.
+
+body_T_cam0: !!opencv-matrix # Timu2c_1 Tu2c
+   rows: 4
+   cols: 4
+   dt: d
+   data: [0.00193013, -0.999997, 0.00115338, -0.00817048,
+      -0.999996, -0.0019327, -0.00223606, 0.015075,
+      0.00223829, -0.00114906, -0.999997, -0.0110795,
+      0, 0, 0, 1]
+
+# camera                     # IMU
+#       /z                    | x
+#      /                      |
+#     /____x             y____|
+#     |                       /
+#     |                      /
+#     | y                   / z
+
+body_T_cam1: !!opencv-matrix # Timu2c_2, Tc1_2_c2 is a virtual transformation [I,t] t = [0.1, 0, 0], note "mbf" in estimator_dpt.cpp
+   rows: 4
+   cols: 4
+   dt: d
+   data: [0.00193013, -0.999997, 0.00115338, -0.007977467,
+      -0.999996, -0.0019327, -0.00223606, -0.0849246,
+      0.00223829, -0.00114906, -0.999997, -0.010855671,
+      0, 0, 0, 1]
+
+
+# Multiple thread support
+multiple_thread: 1
+
+# Feature traker paprameters
+max_cnt: 150            # max feature number in feature tracking
+min_dist: 30            # min distance between two features 
+freq: 10                # frequence (Hz) of publish tracking result. At least 10Hz for good estimation. If set 0, the frequence will be same as raw image 
+F_threshold: 2.0        # ransac threshold (pixel)
+show_track: 1           # publish tracking image as topic
+flow_back: 1            # perform forward and backward optical flow to improve feature tracking accuracy
+
+# IMU acc. multiply
+acc_mult: -9.8
+
+# Optimization parameters
+max_solver_time: 0.04   # max solver itration time (ms), to guarantee real time
+max_num_iterations: 8   # max solver itrations, to guarantee real time
+keyframe_parallax: 20.0 #10.0 # keyframe selection threshold (pixel)
+
+# Imu parameters     The more accurate parameters you provide, the better performance
+acc_n: 0.1       # accelerometer measurement noise standard deviation. 
+gyr_n: 0.01      # gyroscope measurement noise standard deviation.     
+acc_w: 0.001     # accelerometer bias random work noise standard deviation.  
+gyr_w: 0.0001    # gyroscope bias random work noise standard deviation.     
+g_norm: 9.81     # gravity magnitude
+
+# Loop closure
+loop_closure: 0   #if you want to use loop closure to minimize the drift, set loop_closure true and give your brief pattern file path and vocabulary file path accordingly;
+load_previous_pose_graph: 0        # load and reuse previous pose graph; load from 'pose_graph_save_path'
+pose_graph_save_path: "" # save and load path
+save_image: 0 #1     
+
+# Unsynchronization parameters
+estimate_td: 0                      # online estimate time offset between camera and imu
+td: 0.0                             # initial value of time offset. unit: s. readed image clock + td = real image clock (IMU clock)
+
+# Rolling shutter parameters
+rolling_shutter: 0                      # 0: global shutter camera, 1: rolling shutter camera
+rolling_shutter_tr: 0.033               # unit: s. rolling shutter read out time per frame (from data sheet). 
+   
+# RGBD camera Ideal Range
+depth_min_dist: 0.3
+depth_max_dist: 7
+
+# Structural constraints
+horizontal_structural_th: 5.0
+line_horizontal_structural_th: 5.0
+vertical_structural_th: 3.0
+
+# Outlier threshold
+err_pt_line: 10 
+err_normal_line: 10 
+err_point: 20
+err_plane_dist: 1.0
+
+# Result format
+save_tum: 0
+
+# Drop frame
+drop_frame: 0
+
+# Min used num (line/point)
+min_used_num: 4
+
+# ablation study
+structure_verify: 1
+disable_line: 0
+disable_plane: 0
+structure: 1

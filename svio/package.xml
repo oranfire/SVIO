@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package>
+    <name>svio</name>
+    <version>0.1.0</version>
+    <description>
+        Depth Uncertainty Incorporated VIO
+    </description>
+    <author>David Zhang</author>
+    <maintainer email="fuyinzh@gmail.com">XXX</maintainer>
+    <license>LGPL</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+    <build_depend>pcl_conversions</build_depend> 
+    <build_depend>tf</build_depend>
+    <run_depend>pcl_conversions</run_depend>
+    <run_depend>tf</run_depend>
+
+    <build_depend>cv_bridge</build_depend>
+    <run_depend>cv_bridge</run_depend>
+
+    <build_depend>sensor_msgs</build_depend>
+    <run_depend>sensor_msgs</run_depend>
+
+    <build_depend>image_transport</build_depend>
+    <run_depend>image_transport</run_depend>
+
+</package>
+    
